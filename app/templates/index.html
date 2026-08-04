@@ -1,0 +1,124 @@
+{% extends 'base.html' %} {% block title %} Trailwise | Trek Management {%
+endblock %} {% block head %}
+<style>
+  .hero {
+    padding: 5.5rem 0 4rem;
+  }
+
+  .eyebrow {
+    color: #2d7a5b;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    letter-spacing: -0.06em;
+    line-height: 0.98;
+  }
+
+  .hero-art {
+    min-height: 340px;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(145deg, #9bd7bd, #3d8870 45%, #173f35);
+  }
+
+  .mountain {
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-left: 170px solid transparent;
+    border-right: 170px solid transparent;
+    border-bottom: 250px solid #d8eadc;
+  }
+
+  .mountain.two {
+    right: -90px;
+    border-left-width: 210px;
+    border-right-width: 210px;
+    border-bottom-width: 310px;
+    border-bottom-color: #b7d6bd;
+  }
+
+  .mountain.one {
+    left: -70px;
+  }
+
+  .sun {
+    position: absolute;
+    top: 15%;
+    right: 17%;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    background: #fff0ae;
+    box-shadow: 0 0 60px rgba(255, 240, 174, 0.65);
+  }
+
+  .stat-card {
+    border: 1px solid #d6e7dc;
+    border-radius: 1rem;
+    background: #fff;
+  }
+
+</style>
+{% endblock %} {% block content %}
+<section class="container hero">
+  <div class="row align-items-center g-5">
+    <div class="col-lg-7">
+      <p class="eyebrow mb-3">Your next trail starts here</p>
+      <h1 class="fw-bold mb-4">Plan boldly.<br />Walk farther.</h1>
+      <p class="lead text-secondary col-lg-10 mb-4">
+        Trailwise brings trekkers and trek staff together in one simple
+        place—ready for every summit, sunrise, and story.
+      </p>
+      <div class="d-flex flex-wrap gap-3">
+        <a class="btn btn-primary btn-lg px-4" href="">Join Trailwise</a
+        ><a class="btn btn-outline-primary btn-lg px-4" href="">Log in</a>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="hero-art" role="img" aria-label="Stylised mountain landscape">
+        <span class="sun"></span><span class="mountain one"></span
+        ><span class="mountain two"></span>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="container pb-5">
+  <div class="row g-3">
+    <div class="col-md-4">
+      <div class="stat-card h-100 p-4">
+        <div class="fs-3 mb-2">◈</div>
+        <h2 class="h5">Discover treks</h2>
+        <p class="mb-0 text-secondary">
+          Keep upcoming adventures organised in one place.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="stat-card h-100 p-4">
+        <div class="fs-3 mb-2">◉</div>
+        <h2 class="h5">Book with ease</h2>
+        <p class="mb-0 text-secondary">
+          A clear path from choosing a trek to joining it.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="stat-card h-100 p-4">
+        <div class="fs-3 mb-2">△</div>
+        <h2 class="h5">Stay prepared</h2>
+        <p class="mb-0 text-secondary">
+          Bring staff and trekkers together for every journey.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
