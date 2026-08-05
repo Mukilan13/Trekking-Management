@@ -1,0 +1,134 @@
+{% extends "base.html" %} {% block title %}Manage Treks{% endblock %} {% block
+content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2><i class="fa-solid fa-route me-2"></i>Manage Treks</h2>
+  <a href="" class="btn btn-forest"
+    ><i class="fa-solid fa-plus me-1"></i>New Trek</a
+  >
+</div>
+
+<form method="GET" class="row g-2 mb-4">
+  <div class="col-md-4">
+    <input
+      type="text"
+      name="q"
+      class="form-control"
+      placeholder="Search name, location, or ID"
+      value="{{ q }}"
+    />
+  </div>
+  <div class="col-md-3">
+    <select name="difficulty" class="form-select">
+      <option value="">All Difficulties</option>
+      {% for d in ["Easy", "Moderate", "Difficult"] %}
+      <option value="{{ d }}" {% if difficulty == d %}selected{% endif %}>
+        {{ d }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-3">
+    <select name="status" class="form-select">
+      <option value="">All Statuses</option>
+      {% for s in ["Open", "Closed", "Started", "Completed"] %}
+      <option value="{{ s }}" {% if status == s %}selected{% endif %}>
+        {{ s }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <button class="btn btn-outline-secondary w-100 px-[10px]" style="padding-top: 11px; padding-bottom: 11px;" type="submit">
+      <i class="fa-solid fa-filter me-1"></i>Filter
+    </button>
+  </div>
+</form>
+
+<div class="card trek-card">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0 align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Location</th>
+          <th>Difficulty</th>
+          <th>Dates</th>
+          <th>Slots</th>
+          <th>Staff</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in treks %}
+        <tr>
+          <td>{{ t.id }}</td>
+          <td>{{ t.name }}</td>
+          <td>{{ t.location }}</td>
+          <td>
+            <span class="badge badge-{{ t.difficulty|lower }}"
+              >{{ t.difficulty }}</span
+            >
+          </td>
+          <td>
+            {{ t.start_date.strftime('%d %b %Y') }} - {{ t.end_date.strftime('%d
+            %b %Y') }}
+          </td>
+          <td>{{ t.available_slots }} / {{ t.total_slots }}</td>
+          <td>{{ t.staff.name if t.staff else "Unassigned" }}</td>
+          <td>
+            <span class="badge badge-{{ t.status|lower }}">{{ t.status }}</span>
+          </td>
+          <td class="text-nowrap">
+            <a
+              href="{{ url_for('admin.edit_trek', trek_id=t.id) }}"
+              class="btn btn-sm btn-outline-secondary"
+              title="Edit"
+              ><i class="fa-solid fa-pen"></i
+            ></a>
+            {% if t.status == "Open" %}
+            <form
+              method="POST"
+              action="{{ url_for('admin.close_trek', trek_id=t.id) }}"
+              class="d-inline"
+            >
+              <button class="btn btn-sm btn-outline-warning" title="Close">
+                <i class="fa-solid fa-lock"></i>
+              </button>
+            </form>
+            {% elif t.status == "Closed" %}
+            <form
+              method="POST"
+              action="{{ url_for('admin.reopen_trek', trek_id=t.id) }}"
+              class="d-inline"
+            >
+              <button class="btn btn-sm btn-outline-success" title="Reopen">
+                <i class="fa-solid fa-lock-open"></i>
+              </button>
+            </form>
+            {% endif %}
+            <form
+              method="POST"
+              action="{{ url_for('admin.delete_trek', trek_id=t.id) }}"
+              class="d-inline"
+              onsubmit="return confirm('Delete this trek permanently?');"
+            >
+              <button class="btn btn-sm btn-outline-danger" title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="9" class="text-center text-muted py-3">
+            No treks found.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -33,6 +33,14 @@ class User(UserMixin, db.Model):
         default=False
     )
 
+    # Relationship: a staff User may manage multiple Treks
+    treks = db.relationship(
+        "Trek",
+        back_populates="staff",
+        foreign_keys="Trek.staff_id",
+        lazy="dynamic",
+    )
+
     created_at = db.Column(
         db.DateTime,
         default=datetime.now(timezone.utc)

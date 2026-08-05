@@ -6,6 +6,7 @@ from .config import Config
 from .extensions import db, login_manager
 
 from app.routes.auth_route import auth
+from app.routes.admin_route import admin
 
 
 def create_app():
@@ -48,7 +49,8 @@ def create_app():
     
     from app import models
     
-    app.register_blueprint(auth)       
+    app.register_blueprint(auth)  
+    app.register_blueprint(admin)     
 
     with app.app_context():
         db.create_all()

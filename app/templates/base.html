@@ -15,6 +15,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
     <style>
       :root {
         --forest: #173f35;
@@ -66,6 +67,45 @@
 
       .page-shell {
         min-height: calc(100vh - 144px);
+      }
+
+      .trek-sidebar {
+        min-height: calc(100vh - 56px);
+        background: #1B4332;
+      }
+
+      .trek-sidebar .nav-link {
+        color: #dbe7d2;
+        padding: 0.85rem 1rem;
+        transition: background 0.2s ease, color 0.2s ease;
+      }
+
+      .trek-sidebar .nav-link:hover,
+      .trek-sidebar .nav-link.active {
+        background: #2d7a5b;
+        color: #fff;
+      }
+
+      .trek-sidebar .nav-link i {
+        width: 1.45rem;
+      }
+
+      .trek-sidebar .nav {
+        gap: 0.25rem;
+      }
+
+      .trek-sidebar .nav-item {
+        margin-bottom: 0.3rem;
+      }
+
+      .trek-sidebar .nav-link {
+        display: flex;
+        align-items: center;
+      }
+
+      .trek-sidebar .nav-link .fa-solid,
+      .trek-sidebar .nav-link .bi {
+        width: 1.4rem;
       }
 
       .auth-card {
@@ -174,25 +214,174 @@
     </nav>
     {% endblock %}
 
-    <div class="container mt-4">
-      {% with messages = get_flashed_messages(with_categories=true) %} {% if
-      messages %} {% for category, message in messages %}
-      <div
-        class="alert alert-{{ category }} alert-dismissible fade show"
-        role="alert"
-      >
-        {{ message }}
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="alert"
-          aria-label="Close"
-        ></button>
-      </div>
-      {% endfor %} {% endif %} {% endwith %}
-    </div>
+    <div class="container-fluid px-0">
+  <div class="row g-0">
+    {% if current_user.is_authenticated %}
 
-    {% block content %}{% endblock %}
+      <div class="col-lg-2 d-none d-lg-block trek-sidebar">
+        <ul class="nav flex-column pt-4">
+
+          {% if current_user.role == 'ADMIN' %}
+
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}"
+                href="{{ url_for('dashboard') }}"
+              >
+                <i class="fa-solid fa-gauge me-2"></i>
+                Dashboard
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'admin.manage_treks' %}active{% endif %}"
+                href="{{ url_for('admin.manage_treks') }}"
+              >
+                <i class="fa-solid fa-route me-2"></i>
+                Manage Treks
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a
+              class="nav-link {% if request.endpoint == 'admin.manage_staff' %}active{% endif %}"
+              href="{{ url_for('admin.manage_staff') }}">
+                <i class="fa-solid fa-user-tie me-2"></i>
+                Manage Staff
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a 
+              class="nav-link {% if request.endpoint == 'admin.manage_user' %}active{% endif %}" 
+              href="{{ url_for('admin.manage_user') }}">
+                <i class="fa-solid fa-users me-2"></i>
+                Manage Users
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#">
+                <i class="fa-solid fa-clipboard-list me-2"></i>
+                Bookings
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#">
+                <i class="fa-solid fa-chart-line me-2"></i>
+                Reports
+              </a>
+            </li>
+
+          {% elif current_user.role == 'STAFF' %}
+
+            {% if current_user.is_approved %}
+
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('dashboard') }}">
+                  <i class="fa-solid fa-gauge me-2"></i>
+                  Dashboard
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link disabled" href="#">
+                  <i class="fa-solid fa-route me-2"></i>
+                  Assigned Treks
+                </a>
+              </li>
+
+            {% else %}
+
+              <li class="nav-item">
+                <a class="nav-link disabled" href="#">
+                  <i class="fa-solid fa-hourglass-half me-2"></i>
+                  Pending Approval
+                </a>
+              </li>
+
+            {% endif %}
+
+          {% elif current_user.role == 'USER' %}
+
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('dashboard') }}">
+                <i class="fa-solid fa-gauge me-2"></i>
+                Dashboard
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#">
+                <i class="fa-solid fa-magnifying-glass me-2"></i>
+                Browse Treks
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#">
+                <i class="fa-solid fa-clock-rotate-left me-2"></i>
+                Booking History
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#">
+                <i class="fa-solid fa-id-card me-2"></i>
+                Profile
+              </a>
+            </li>
+
+          {% endif %}
+
+        </ul>
+      </div>
+
+      <div class="col-lg-10">
+
+    {% else %}
+
+      <div class="col-12">
+
+    {% endif %}
+
+        <div class="p-4">
+
+          {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+              {% for category, message in messages %}
+
+                <div
+                  class="alert alert-{{ category }} alert-dismissible fade show"
+                  role="alert"
+                >
+                  {{ message }}
+
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                  ></button>
+                </div>
+
+              {% endfor %}
+
+            {% endif %}
+
+          {% endwith %}
+
+          {% block content %}
+          {% endblock %}
+
+        </div>
+
+      </div>
+  </div>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
   </body>
