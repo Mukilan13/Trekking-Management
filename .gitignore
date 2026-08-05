@@ -13,13 +13,6 @@ env/
 .env
 .env.*
 
-# Database files
-*.db
-*.sqlite3
-trek.db
-instance/*.db
-instance/*.sqlite3
-
 # Test and coverage artifacts
 .pytest_cache/
 .coverage

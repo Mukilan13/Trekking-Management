@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Staff Dashboard | Trekwiser{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+  <h1 class="h3">Staff Dashboard</h1>
+  <p>Welcome, {{ current_user.name }}. Manage your assigned treks here.</p>
+</section>
+{% endblock %}

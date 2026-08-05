@@ -78,8 +78,8 @@ endblock %} {% block head %}
         place—ready for every summit, sunrise, and story.
       </p>
       <div class="d-flex flex-wrap gap-3">
-        <a class="btn btn-primary btn-lg px-4" href="">Join Trailwise</a
-        ><a class="btn btn-outline-primary btn-lg px-4" href="">Log in</a>
+        <a class="btn btn-primary btn-lg px-4" href="{{ url_for('auth.register') }}">Join Trailwise</a
+        ><a class="btn btn-outline-primary btn-lg px-4" href="{{ url_for('auth.login') }}">Log in</a>
       </div>
     </div>
     <div class="col-lg-5">
