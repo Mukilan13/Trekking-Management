@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}
+Manage {{ trek.name }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container" style="max-width: 900px">
+
+    <h1 class="h2">{{ trek.name }}</h1>
+
+    <p class="text-muted">
+        {{ trek.location }} ·
+        {{ trek.start_date.strftime('%d %b %Y') }}
+        to
+        {{ trek.end_date.strftime('%d %b %Y') }}
+    </p>
+
+    <div class="card mb-4">
+        <div class="card-body">
+
+            <h2 class="h5">Trek Controls</h2>
+
+            <p class="mb-3">
+                Current status:
+                <span class="badge bg-secondary">{{ trek.status }}</span>
+            </p>
+
+            {% if trek.status == 'Open' %}
+                <form method="POST" class="row g-2 align-items-end mb-3">
+                    <input type="hidden" name="action" value="update_slots">
+                    <div class="col-sm-5">
+                        <label for="available-slots" class="form-label">Available Slots</label>
+                        <input
+                            id="available-slots"
+                            type="number"
+                            name="available_slots"
+                            class="form-control"
+                            min="0"
+                            max="{{ trek.total_slots - trek.bookings.filter_by(status='Booked').count() }}"
+                            value="{{ trek.available_slots }}"
+                            required
+                        >
+                    </div>
+                    <div class="col-sm-auto">
+                        <button class="btn btn-outline-primary" style="margin-top: 11px; margin-bottom: 10px;" >Update Slots</button>
+                    </div>
+                </form>
+            {% endif %}
+
+            {% if trek.status == 'Open' %}
+                <p class="text-muted mb-0">This trek is still open for bookings.</p>
+            {% elif trek.status == 'Closed' %}
+                <form method="POST" onsubmit="return confirm('Start this trek? Participants will no longer be able to book it.');">
+                    <input type="hidden" name="action" value="start">
+                    <button class="btn btn-primary">Start Trek</button>
+                </form>
+            {% elif trek.status == 'Started' %}
+                <form method="POST" onsubmit="return confirm('Complete this trek? Active participant bookings will be marked as completed.');">
+                    <input type="hidden" name="action" value="complete">
+                    <button class="btn btn-success">Complete Trek</button>
+                </form>
+            {% else %}
+                <p class="text-muted mb-0">This trek has already been completed.</p>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <h2 class="h4">
+        Active Participants
+    </h2>
+
+    <div class="card">
+
+        <div class="table-responsive">
+
+            <table class="table mb-0">
+
+                <thead>
+
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Booked On</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for b in participants %}
+
+                        <tr>
+
+                            <td>{{ b.user.name }}</td>
+
+                            <td>{{ b.user.email }}</td>
+
+                            <td>{{ b.user.phone }}</td>
+
+                            <td>
+                                {{ b.booked_at.strftime('%d %b %Y') }}
+                            </td>
+
+                        </tr>
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="4" class="text-muted text-center">
+                                No active bookings yet.
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

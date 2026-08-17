@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block title %}
+User Dashboard | Trekwiser
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h2">Welcome, {{ current_user.name }}</h1>
+      <p class="text-muted mb-0">
+        Find and book your next adventure.
+      </p>
+    </div>
+
+    <a
+      class="btn btn-outline-primary"
+      href="{{ url_for('user.profile') }}"
+    >
+      Edit profile
+    </a>
+  </div>
+
+  <form class="row g-2 mb-4">
+
+    <div class="col-md-4">
+      <input
+        name="q"
+        value="{{ q }}"
+        class="form-control"
+        placeholder="Search treks or locations"
+      >
+    </div>
+
+    <div class="col-md-3">
+      <select
+        name="difficulty"
+        class="form-select"
+      >
+        <option value="">
+          All difficulties
+        </option>
+
+        {% for d in ['Easy', 'Moderate', 'Difficult'] %}
+
+          <option
+            {% if difficulty == d %}
+              selected
+            {% endif %}
+          >
+            {{ d }}
+          </option>
+
+        {% endfor %}
+
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <input
+        name="location"
+        value="{{ location }}"
+        class="form-control"
+        placeholder="Location"
+      >
+    </div>
+
+    <div class="col-md-2">
+      <button class="btn btn-primary w-100" 
+      style="padding-top: 10px; padding-bottom: 11px">
+        Search
+      </button>
+    </div>
+
+  </form>
+
+  <div class="row g-3">
+
+    {% for trek in treks %}
+
+      <div class="col-md-6 col-xl-4">
+
+        <div class="card h-100 shadow-sm">
+
+          <div class="card-body">
+
+            <h2 class="h5">
+              {{ trek.name }}
+            </h2>
+
+            <p class="text-muted">
+              {{ trek.location }} · <span class="text-primary">{{ trek.difficulty }}</span>
+            </p>
+
+            <p class="small">
+              {{ trek.start_date.strftime('%d %b %Y') }}
+              –
+              {{ trek.end_date.strftime('%d %b %Y') }}
+              <br>
+              {{ trek.available_slots }} slots remaining
+            </p>
+
+            <p>
+              {{ trek.description or 'A guided trek for your next adventure.' }}
+            </p>
+
+            {% if trek.id in booked_ids %}
+
+              <span class="badge bg-success">
+                Booked
+              </span>
+
+            {% else %}
+
+              <form
+                method="post"
+                action="{{ url_for('user.book', trek_id=trek.id) }}"
+              >
+                <button class="btn btn-primary">
+                  Book trek
+                </button>
+              </form>
+
+            {% endif %}
+
+          </div>
+
+        </div>
+
+      </div>
+
+    {% else %}
+
+      <p class="text-muted">
+        No open treks match your search.
+      </p>
+
+    {% endfor %}
+
+    <p class="text-danger">NOTE: The treks are closed a day prior to the start date.</p>
+
+  </div>
+
+  <h2 class="h4 mt-5">
+    Booking history
+  </h2>
+
+  <div class="card">
+
+    <div class="table-responsive">
+
+      <table class="table mb-0">
+
+        <thead>
+
+          <tr>
+            <th>Trek</th>
+            <th>Booked on</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          {% for b in bookings %}
+
+            <tr>
+
+              <td>
+                {{ b.trek.name }}
+              </td>
+
+              <td>
+                {{ b.booked_at.strftime('%d %b %Y') }}
+              </td>
+
+              <td>
+                {{ b.status }}
+              </td>
+
+              <td>
+
+                {% if b.status == 'Booked' %}
+
+                  <form
+                    method="post"
+                    action="{{ url_for('user.cancel', booking_id=b.id) }}"
+                  >
+                    <button class="btn btn-sm btn-outline-danger">
+                      Cancel
+                    </button>
+                  </form>
+
+                {% endif %}
+
+              </td>
+
+            </tr>
+
+          {% else %}
+
+            <tr>
+
+              <td
+                colspan="4"
+                class="text-muted"
+              >
+                You have not booked a trek yet.
+              </td>
+
+            </tr>
+
+          {% endfor %}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

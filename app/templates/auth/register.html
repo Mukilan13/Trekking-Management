@@ -1,0 +1,101 @@
+{% extends "base.html" %} {% block title %}Create account | Trailwise{% endblock
+%} {% block navbar %}{% endblock %} {% block content %}
+<section
+  class="container py-4 py-md-5 min-vh-100 d-flex align-items-center justify-content-center"
+>
+  <div class="row w-100 justify-content-center">
+    <div class="col-lg-7 col-xl-6">
+      <div class="card auth-card">
+        <div class="card-body p-4 p-md-5">
+          <h1 class="h2 fw-bold mb-2 text-center">Create your account</h1>
+          <form
+            method="POST"
+            class="d-flex flex-column justify-content-center align-items-center"
+            novalidate
+          >
+            {{ form.hidden_tag() }}
+            <div class="mb-3 w-100">
+              {{form.name.label(class="form-label fw-semibold")}} {{
+              form.name(class="form-control", placeholder="Enter your fullname",
+              autocomplete="name")}} {% for error in form.name.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="mb-3 w-100">
+              {{ form.email.label(class="form-label fw-semibold")}} {{
+              form.email(class="form-control", placeholder="Enter your email")}}
+              {% for error in form.email.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="mb-3 w-100">
+              {{ form.phone.label(class="form-label fw-semibold")}} {{
+              form.phone(class="form-control", placeholder="Enter your phone number")}} {% for error in form.phone.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="mb-3 w-100">
+              {{ form.role.label(class="form-label fw-semibold")}} {{
+              form.role(class="form-select")}} {% for error in form.role.errors
+              %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="mb-3 w-100">
+              {{ form.password.label(class="form-label fw-semibold") }}
+              <div class="password-wrap">
+                {{ form.password(class="form-control", id="register-password",
+                placeholder="Enter your password", autocomplete="new-password")
+                }}
+                <button
+                  class="password-toggle"
+                  type="button"
+                  data-password-toggle="register-password"
+                  aria-label="Show password"
+                  aria-pressed="false"
+                >
+                  <i class="fa-regular fa-eye"></i>
+                  <i class="fa-regular fa-eye-slash"></i>
+                </button>
+              </div>
+              {% for error in form.password.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            {{ form.submit(class="btn btn-primary w-100 py-2") }}
+          </form>
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              const toggle = document.querySelector(
+                '[data-password-toggle="register-password"]',
+              );
+              const input = document.getElementById("register-password");
+
+              if (!toggle || !input) return;
+
+              toggle.addEventListener("click", () => {
+                const show = input.type === "password";
+                input.type = show ? "text" : "password";
+                toggle.classList.toggle("show", show);
+                toggle.setAttribute("aria-pressed", String(show));
+                toggle.setAttribute(
+                  "aria-label",
+                  show ? "Hide password" : "Show password",
+                );
+              });
+            });
+          </script>
+          <p class="text-center text-secondary mb-0 mt-4">
+            Already have an account?
+            <a
+              class="link-success fw-semibold"
+              href="{{ url_for('auth.login') }}"
+              >Log in</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

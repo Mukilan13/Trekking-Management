@@ -1,0 +1,172 @@
+paths:
+
+  /register:
+    get:
+      summary: Registration Page
+    post:
+      summary: Register User
+
+  /login:
+    get:
+      summary: Login Page
+    post:
+      summary: Authenticate User
+
+  /logout:
+    get:
+      summary: Logout User
+
+  /admin:
+    get:
+      summary: Admin Dashboard
+      security:
+        - SessionAuth: []
+
+  /admin/treks:
+    get:
+      summary: View Treks
+
+  /admin/treks/new:
+    get:
+      summary: Create Trek Form
+    post:
+      summary: Create Trek
+
+  /admin/treks/{trek_id}/edit:
+    get:
+      summary: Edit Trek Form
+      parameters:
+        - name: trek_id
+          in: path
+          required: true
+          schema:
+            type: integer
+    post:
+      summary: Update Trek
+      parameters:
+        - name: trek_id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /admin/treks/{trek_id}/{action}:
+    post:
+      summary: Trek Action
+      parameters:
+        - name: trek_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: action
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - delete
+              - close
+              - reopen
+
+  /admin/staff:
+    get:
+      summary: Manage Staff
+
+  /admin/users:
+    get:
+      summary: Manage Users
+
+  /admin/bookings:
+    get:
+      summary: Manage Bookings
+
+  /admin/staff/{staff_id}/{action}:
+    post:
+      summary: Staff Action
+      parameters:
+        - name: staff_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: action
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - approve
+              - blacklist
+              - unblacklist
+
+  /admin/users/{user_id}/{action}:
+    post:
+      summary: User Action
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: action
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - blacklist
+              - unblacklist
+
+  /staff:
+    get:
+      summary: Staff Dashboard
+
+  /staff/treks/{trek_id}:
+    get:
+      summary: View Assigned Trek
+      parameters:
+        - name: trek_id
+          in: path
+          required: true
+          schema:
+            type: integer
+    post:
+      summary: Update assigned trek slots or start/complete the trek
+
+  /user:
+    get:
+      summary: User Dashboard
+
+  /user/treks/{trek_id}/book:
+    post:
+      summary: Book Trek
+      parameters:
+        - name: trek_id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /user/bookings/{booking_id}/cancel:
+    post:
+      summary: Cancel Booking
+      parameters:
+        - name: booking_id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+  /user/profile:
+    get:
+      summary: View Profile
+    post:
+      summary: Update Profile
+
+components:
+  securitySchemes:
+    SessionAuth:
+      type: apiKey
+      in: cookie
+      name: session

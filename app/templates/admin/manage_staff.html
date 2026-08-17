@@ -1,0 +1,100 @@
+{% extends "base.html" %} {% block title %}Manage Staff{% endblock %} {% block
+content %}
+<h2 class="mb-4"><i class="fa-solid fa-user-tie me-2"></i>Manage Staff</h2>
+<form method="GET" class="row g-2 mb-4">
+  <div class="col-md-6">
+    <input
+      name="q"
+      class="form-control"
+      value="{{ q }}"
+      placeholder="Search name, email, or ID"
+    />
+  </div>
+  <div class="col-md-2">
+    <button
+      class="btn btn-outline-secondary w-100"
+      style="padding-top: 11px; padding-bottom: 11px"
+    >
+      Search
+    </button>
+  </div>
+</form>
+
+<div class="card trek-card">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0 align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Approval</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in staff_list %}
+        <tr>
+          <td>{{ s.id }}</td>
+          <td>{{ s.name }}</td>
+          <td>{{ s.email }}</td>
+          <td>
+            {% if s.is_approved %}
+            <span class="badge bg-success">Approved</span>
+            {% else %}
+            <span class="badge bg-warning text-dark">Pending</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if s.is_blacklisted %}
+            <span class="badge bg-danger">Blacklisted</span>
+            {% else %}
+            <span class="badge bg-secondary">Active</span>
+            {% endif %}
+          </td>
+          <td class="text-nowrap">
+            {% if not s.is_approved %}
+            <form
+              method="POST"
+              action="{{ url_for('admin.staff_action', staff_id=s.id, action='approve') }}"
+              class="d-inline"
+            >
+              <button class="btn btn-sm btn-success">
+                <i class="fa-solid fa-check me-1"></i>Approve
+              </button>
+            </form>
+            {% endif %} {% if s.is_blacklisted %}
+            <form
+              method="POST"
+              action="{{ url_for('admin.staff_action', staff_id=s.id, action='unblacklist') }}"
+              class="d-inline"
+            >
+              <button class="btn btn-sm btn-outline-success">
+                Remove Blacklist
+              </button>
+            </form>
+            {% else %}
+            <form
+              method="POST"
+              action="{{ url_for('admin.staff_action', staff_id=s.id, action='blacklist') }}"
+              class="d-inline"
+              onsubmit="return confirm('Blacklist this staff member?');"
+            >
+              <button class="btn btn-sm btn-outline-danger">Blacklist</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="text-center text-muted py-3">
+            No staff registered yet.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

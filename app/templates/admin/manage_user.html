@@ -1,0 +1,87 @@
+{% extends "base.html" %} {% block title %}Manage Users{% endblock %} {% block
+content %}
+<h2 class="mb-4"><i class="fa-solid fa-users me-2"></i>Manage Users</h2>
+
+<form method="GET" class="row g-2 mb-4">
+  <div class="col-md-6">
+    <input
+      type="text"
+      name="q"
+      class="form-control"
+      placeholder="Search by name or email"
+      value="{{ q }}"
+    />
+  </div>
+  <div class="col-md-2">
+    <button
+      class="btn btn-outline-secondary w-100"
+      style="padding-top: 11px; padding-bottom: 11px"
+      type="submit"
+    >
+      Search
+    </button>
+  </div>
+</form>
+
+<div class="card trek-card">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0 align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Joined</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td>{{ u.id }}</td>
+          <td>{{ u.name }}</td>
+          <td>{{ u.email }}</td>
+          <td>
+            {% if u.is_blacklisted %}
+            <span class="badge bg-danger">Blacklisted</span>
+            {% else %}
+            <span class="badge bg-secondary">Active</span>
+            {% endif %}
+          </td>
+          <td>{{ u.created_at.strftime('%d %b %Y') }}</td>
+          <td>
+            {% if u.is_blacklisted %}
+            <form
+              method="POST"
+              action="{{ url_for('admin.user_action', user_id=u.id, action='unblacklist') }}"
+              class="d-inline"
+            >
+              <button class="btn btn-sm btn-outline-success">
+                Remove Blacklist
+              </button>
+            </form>
+            {% else %}
+            <form
+              method="POST"
+              action="{{ url_for('admin.user_action', user_id=u.id, action='blacklist') }}"
+              class="d-inline"
+              onsubmit="return confirm('Blacklist this user?');"
+            >
+              <button class="btn btn-sm btn-outline-danger">Blacklist</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="text-center text-muted py-3">
+            No users found.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

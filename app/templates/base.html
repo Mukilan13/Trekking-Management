@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Trekwiser | Trek Management{% endblock %}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.0/css/all.min.css"
+      integrity="sha512-ApSLB1Pd3/bZN8fWB/RG9YhN/7bd9Hkf3AGaE2mPfebjrxagjuBtx2GcgdqIlJkUzwylBo61r9Xa9NmgBI0swA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+    <style>
+      :root {
+        --forest: #173f35;
+        --leaf: #2d7a5b;
+        --mist: #eff7f2;
+        --ink: #17221e;
+      }
+
+      body {
+        background: var(--mist);
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      .navbar {
+        background: rgba(23, 63, 53, 0.97);
+      }
+
+      .brand-mark {
+        display: inline-grid;
+        place-items: center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 0.65rem;
+        background: #8dd39e;
+        color: var(--forest);
+        font-weight: 800;
+      }
+
+      .btn-primary {
+        --bs-btn-bg: var(--leaf);
+        --bs-btn-border-color: var(--leaf);
+        --bs-btn-hover-bg: #226448;
+        --bs-btn-hover-border-color: #226448;
+      }
+
+      .btn-outline-primary {
+        --bs-btn-color: var(--leaf);
+        --bs-btn-border-color: var(--leaf);
+        --bs-btn-hover-bg: var(--leaf);
+        --bs-btn-hover-border-color: var(--leaf);
+      }
+
+      .page-shell {
+        min-height: calc(100vh - 144px);
+      }
+
+      .trek-sidebar {
+        min-height: calc(100vh - 56px);
+        background: #1b4332;
+      }
+
+      .trek-sidebar .nav-link {
+        color: #dbe7d2;
+        padding: 0.85rem 1rem;
+        transition:
+          background 0.2s ease,
+          color 0.2s ease;
+      }
+
+      .trek-sidebar .nav-link:hover,
+      .trek-sidebar .nav-link.active {
+        background: #2d7a5b;
+        color: #fff;
+      }
+
+      .trek-sidebar .nav-link i {
+        width: 1.45rem;
+      }
+
+      .trek-sidebar .nav {
+        gap: 0.25rem;
+      }
+
+      .trek-sidebar .nav-item {
+        margin-bottom: 0.3rem;
+      }
+
+      .trek-sidebar .nav-link {
+        display: flex;
+        align-items: center;
+      }
+
+      .trek-sidebar .nav-link .fa-solid,
+      .trek-sidebar .nav-link .bi {
+        width: 1.4rem;
+      }
+
+      .auth-card {
+        border: 0;
+        border-radius: 1.25rem;
+        box-shadow: 0 18px 45px rgba(23, 63, 53, 0.12);
+      }
+
+      .form-control,
+      .form-select {
+        border-radius: 0.7rem;
+        padding: 0.72rem 0.85rem;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        border-color: #72b895;
+        box-shadow: 0 0 0 0.25rem rgba(45, 122, 91, 0.15);
+      }
+
+      .password-wrap {
+        position: relative;
+      }
+
+      .password-wrap .form-control {
+        padding-right: 4.3rem;
+      }
+
+      .password-toggle {
+        position: absolute;
+        top: 50%;
+        right: 0.45rem;
+        transform: translateY(-50%);
+        border: 0;
+        background: transparent;
+        color: #527066;
+        padding: 0.45rem;
+      }
+
+      .password-toggle:hover {
+        color: var(--forest);
+      }
+
+      .password-toggle .fa-eye {
+        display: none;
+      }
+
+      .password-toggle .fa-eye-slash {
+        display: inline-block;
+      }
+
+      .password-toggle.show .fa-eye {
+        display: inline-block;
+      }
+
+      .password-toggle.show .fa-eye-slash {
+        display: none;
+      }
+
+      footer {
+        color: #64736c;
+      }
+    </style>
+    {% block head %}{% endblock head %}
+  </head>
+
+  <body>
+    {% block navbar %}
+    <nav class="navbar navbar-expand-md navbar-dark py-3 shadow-sm">
+      <div class="container">
+        <a
+          class="navbar-brand d-flex align-items-center gap-2 fw-bold"
+          href="{{ url_for('main.home') }}"
+          ><span class="brand-mark" aria-hidden="true">▲</span> Trekwiser</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNav"
+          aria-controls="mainNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+          <div class="navbar-nav ms-auto align-items-md-center gap-md-2">
+            {% if current_user.is_authenticated %}
+            <a
+              class="btn btn-light btn-sm px-3 mt-2 mt-md-0"
+              href="{{ url_for('auth.logout') }}"
+              >Log out</a
+            >
+            {% else %}
+            <a class="nav-link" href="{{ url_for('main.home') }}">Home</a>
+            <a
+              class="btn btn-light btn-sm px-3 mt-2 mt-md-0"
+              href="{{ url_for('auth.login') }}"
+              >Log in</a
+            >
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+    {% endblock %}
+
+    <div class="container-fluid px-0">
+      <div class="row g-0">
+        {% if current_user.is_authenticated %}
+
+        <div class="col-lg-2 d-none d-lg-block trek-sidebar">
+          <ul class="nav flex-column pt-4">
+            {% if current_user.role == 'ADMIN' %}
+
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'admin.dashboard' %}active{% endif %}"
+                href="{{ url_for('admin.dashboard') }}"
+              >
+                <i class="fa-solid fa-gauge me-2"></i>
+                Dashboard
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'admin.manage_treks' %}active{% endif %}"
+                href="{{ url_for('admin.manage_treks') }}"
+              >
+                <i class="fa-solid fa-route me-2"></i>
+                Manage Treks
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'admin.manage_staff' %}active{% endif %}"
+                href="{{ url_for('admin.manage_staff') }}"
+              >
+                <i class="fa-solid fa-user-tie me-2"></i>
+                Manage Staff
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'admin.manage_user' %}active{% endif %}"
+                href="{{ url_for('admin.manage_user') }}"
+              >
+                <i class="fa-solid fa-users me-2"></i>
+                Manage Users
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link {% if request.endpoint == 'admin.manage_bookings' %}active{% endif %}" href="{{ url_for('admin.manage_bookings') }}">
+                <i class="fa-solid fa-clipboard-list me-2"></i>
+                Bookings
+              </a>
+            </li>
+
+            {% elif current_user.role == 'STAFF' and current_user.is_approved %}
+
+            <li class="nav-item">
+              <a class="nav-link {% if request.endpoint == 'staff.dashboard' %}active{% endif %}" href="{{ url_for('staff.dashboard') }}">
+                <i class="fa-solid fa-gauge me-2"></i>
+                Dashboard
+              </a>
+            </li>
+            {% elif current_user.role == 'USER' %}
+
+            <li class="nav-item">
+              <a class="nav-link {% if request.endpoint == 'user.dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">
+                <i class="fa-solid fa-gauge me-2"></i>
+                Dashboard
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link {% if request.endpoint == 'user.profile' %}active{% endif %}" href="{{ url_for('user.profile') }}">
+                <i class="fa-solid fa-id-card me-2"></i>
+                Profile
+              </a>
+            </li>
+
+            {% endif %}
+          </ul>
+        </div>
+
+        <div class="col-lg-10">
+          {% else %}
+
+          <div class="col-12">
+            {% endif %}
+
+            <div class="p-4">
+              {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %} {% for category, message in messages %}
+
+              <div
+                class="alert alert-{{ category }} alert-dismissible fade show"
+                role="alert"
+              >
+                {{ message }}
+
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="alert"
+                ></button>
+              </div>
+
+              {% endfor %} {% endif %} {% endwith %} {% block content %} {%
+              endblock %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
